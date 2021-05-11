@@ -17,7 +17,7 @@ const Bootstraptab = () => {
     },
     {
       dataField: "articulo",
-      text: "Articulo",
+      text: "Articulo" ,
     },
     {
       dataField: "descripcion",
