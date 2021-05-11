@@ -1,12 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import axios from "axios";
-import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
-import paginationFactory from "react-bootstrap-table2-paginator";
+import filterFactory from "react-bootstrap-table2-filter";
 
-export default function Bootstraptab() {
-  const [products, setProducts] = useState([]);
-  const [columns, setcolumns] = useState([
+const Bootstraptab = () => {
+  const [productos, setproductos] = useState([]);
+  const [columnas] = useState([
+    {
+      dataField: "id",
+      text: "id",
+    },
     {
       dataField: "codbarra",
       text: "Cod.Barra",
@@ -14,27 +17,23 @@ export default function Bootstraptab() {
     {
       dataField: "articulo",
       text: "Articulo",
-      // filter: textFilter(),
     },
     {
       dataField: "descripcion",
       text: "Descripcion",
-      // sort: true,
     },
     {
       dataField: "marca",
       text: "Marca",
-      // sort: true,
     },
   ]);
 
-  useEffect(() => {
-    axios.get("http://localhost/php/all-productos.php").then((response) => {
-      console.log("Todo ", response.data);
-      setProducts(response.data);
-    });
-  }, []);
+  useEffect(async () => {
+    const { data } = await axios.get("http://localhost/php/all-productos.php");
+    setproductos(data.productos)
+  });
 
+  // Corregir este objeto
   const options = {
     page: 2,
     sizePerPageList: [
@@ -48,7 +47,7 @@ export default function Bootstraptab() {
       },
       {
         text: "All",
-        // value: this.state.products.length,
+        value: productos.length,
       },
     ],
     sizePerPage: 5,
@@ -67,16 +66,18 @@ export default function Bootstraptab() {
         <div className="col-sm-12 btn btn-info">Productos</div>
       </div>
       <div className="container" style={{ marginTop: 50 }}>
+        {console.log("Todo ", productos)}
         <BootstrapTable
           striped
           hover
-        //   keyField="id"
-          data={products}
-          columns={columns}
+          keyField="id"
+          data={productos}
+          columns={columnas}
           filter={filterFactory()}
-          pagination={paginationFactory(options)}
         />
       </div>
     </div>
   );
-}
+};
+
+export default Bootstraptab;

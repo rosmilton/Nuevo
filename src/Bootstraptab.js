@@ -1,103 +1,111 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import BootstrapTable from "react-bootstrap-table-next";
 import axios from "axios";
-import filterFactory, { textFilter } from "react-bootstrap-table2-filter";
-import paginationFactory from "react-bootstrap-table2-paginator";
+import filterFactory from "react-bootstrap-table2-filter";
+import Table from "react-bootstrap/Table";
 
-export class Bootstraptab extends Component {
-  state = {
-    productos: [
+const Bootstraptab = () => {
+  const [productos, setproductos] = useState([]);
+  const [columnas] = useState([
+    {
+      dataField: "id",
+      text: "id",
+    },
+    {
+      dataField: "codbarra",
+      text: "Cod.Barra",
+    },
+    {
+      dataField: "articulo",
+      text: "Articulo",
+    },
+    {
+      dataField: "descripcion",
+      text: "Descripcion",
+    },
+    {
+      dataField: "marca",
+      text: "Marca",
+    },
+  ]);
+
+  useEffect(async () => {
+    const { data } = await axios.get("http://localhost/php/all-productos.php");
+    setproductos(data.productos);
+  });
+
+  // Corregir este objeto
+  const options = {
+    page: 2,
+    sizePerPageList: [
       {
-        id: 1,
-        codbarra: "as123adcs",
-        articulo: "lp123",
-        descripcion: "Primer producto",
-        marca: 1,
-        existe: 1,
-      }],
-    columnas: [
-      {
-        dataField: "id",
-        text: "id",
+        text: "5",
+        value: 5,
       },
       {
-        dataField: "codbarra",
-        text: "Cod.Barra",
+        text: "10",
+        value: 10,
       },
       {
-        dataField: "articulo",
-        text: "Articulo",
-      },
-      {
-        dataField: "descripcion",
-        text: "Descripcion",
-      },
-      {
-        dataField: "marca",
-        text: "Marca",
+        text: "All",
+        value: productos.length,
       },
     ],
+    sizePerPage: 5,
+    pageStartIndex: 0,
+    paginationSize: 3,
+    prePage: "Prev",
+    nextPage: "Next",
+    firstPage: "First",
+    lastPage: "Last",
+    paginationPosition: "top",
   };
 
-  // componentDidMount() {
-  
-  //   axios.get("http://localhost/php/all-productos.php")
-  //   .then((response) => {
-  //     console.log("Todo ",response.data);      
-  //     this.setState(state => ({...state, productos: response.data}))
-  //   });
-  // }
-
-  render() {
-    const options = {
-      page: 2,
-      sizePerPageList: [
-        {
-          text: "5",
-          value: 5,
-        },
-        {
-          text: "10",
-          value: 10,
-        },
-        {
-          text: "All",
-          value: this.state.productos.length,
-        },
-      ],
-      sizePerPage: 5,
-      pageStartIndex: 0,
-      paginationSize: 3,
-      prePage: "Prev",
-      nextPage: "Next",
-      firstPage: "First",
-      lastPage: "Last",
-      paginationPosition: "top",
-    };
-
-
-    return (
-      <div className="container">
-        <div className="hdr row">
-          <div className="col-sm-12 btn btn-info">
-            Productos
-          </div>
-        </div>
-        <div className="container" style={{ marginTop: 50 }}>
-        {console.log("Todo ",this.state.productos) }
-          <BootstrapTable
-            striped
-            hover
-            keyField="id"
-            data={this.state.productos}
-            columns={this.state.columnas}
-            filter={filterFactory()}
-            pagination={paginationFactory(options)}
-          />
-        </div>
+  return (
+    <div className="container">
+      <div className="hdr row">
+        <div className="col-sm-12 btn btn-info">Productos</div>
       </div>
-    );
-  }
-}
+      <div className="container" style={{ marginTop: 50 }}>
+        {console.log("Todo ", productos)}
+        <BootstrapTable
+          striped
+          hover
+          keyField="id"
+          data={productos}
+          columns={columnas}
+          filter={filterFactory()}
+        />
+
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              {columnas.map((col) => (console.log(col), <th> col </th>))}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Mark</td>
+              <td>Otto</td>
+              <td>@mdo</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Jacob</td>
+              <td>Thornton</td>
+              <td>@fat</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td colSpan="2">Larry the Bird</td>
+              <td>@twitter</td>
+            </tr>
+          </tbody>
+        </Table>
+      </div>
+    </div>
+  );
+};
 
 export default Bootstraptab;
