@@ -1,0 +1,22 @@
+body{
+    background-color: rgb(148, 172, 173) !important;
+}
+
+.botones{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+
+}
+
+.botones button{
+    flex: auto;
+    flex-direction: row;
+    margin: 30px;
+}
+
+.botones svg{
+    width: 100px;
+    color: white;
+
+}
